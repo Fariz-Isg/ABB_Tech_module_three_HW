@@ -1,4 +1,4 @@
-package org.abbtech.module3.Service;
+package org.abbtech.module3.service;
 
 import org.abbtech.module3.model.Car;
 import org.springframework.stereotype.Service;

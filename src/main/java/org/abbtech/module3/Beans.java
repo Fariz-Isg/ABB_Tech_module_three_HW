@@ -1,6 +1,5 @@
 package org.abbtech.module3;
 
-import org.abbtech.module3.Service.CarService;
 import org.abbtech.module3.model.Car;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

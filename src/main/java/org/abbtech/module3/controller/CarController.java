@@ -1,6 +1,6 @@
-package org.abbtech.module3.Controller;
+package org.abbtech.module3.controller;
 
-import org.abbtech.module3.Service.CarService;
+import org.abbtech.module3.service.CarService;
 import org.abbtech.module3.model.Car;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
