@@ -1,5 +1,6 @@
 package org.abbtech.module3.service;
 
+import lombok.RequiredArgsConstructor;
 import org.abbtech.module3.dto.PaymentRequest;
 import org.abbtech.module3.dto.PaymentResponse;
 import org.abbtech.module3.exception.InsufficientBalanceException;
@@ -17,15 +18,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
-
-    public PaymentService(PaymentRepository paymentRepository, UserRepository userRepository) {
-        this.paymentRepository = paymentRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     public PaymentResponse createPayment(PaymentRequest request) {
@@ -37,18 +34,23 @@ public class PaymentService {
             throw new InsufficientBalanceException("User balance is not enough");
         }
 
-        Long paymentId = paymentRepository.createPayment(
-                request.userId(),
-                request.amount(),
-                "PENDING"
-        );
+        Payment payment = Payment.builder()
+                .userId(request.userId())
+                .amount(request.amount())
+                .status("PENDING")
+                .build();
 
-        userRepository.updateBalance(request.userId(), newBalance);
-        paymentRepository.updateStatus(paymentId, "SUCCESS");
+        payment = paymentRepository.save(payment);
+
+        user.setBalance(newBalance);
+        userRepository.save(user);
+
+        payment.setStatus("SUCCESS");
+        payment =  paymentRepository.save(payment);
 
         return new PaymentResponse(
-                paymentId,
-                "SUCCESS",
+                payment.getId(),
+                payment.getStatus(),
                 newBalance,
                 null,
                 null,
@@ -77,7 +79,7 @@ public class PaymentService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        List<Payment> payments = paymentRepository.findByUserId(userId);
+        List<Payment> payments = paymentRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         return payments.stream()
                 .map(payment -> new PaymentResponse(

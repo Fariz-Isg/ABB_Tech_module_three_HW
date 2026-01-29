@@ -1,5 +1,6 @@
 package org.abbtech.module3.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.abbtech.module3.dto.PaymentRequest;
 import org.abbtech.module3.dto.PaymentResponse;
 import org.abbtech.module3.service.PaymentService;
@@ -11,13 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
+@RequiredArgsConstructor
 public class PaymentController {
 
     private final PaymentService paymentService;
-
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
 
     @PostMapping
     public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest request) {
