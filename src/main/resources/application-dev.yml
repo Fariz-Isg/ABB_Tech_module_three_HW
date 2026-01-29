@@ -1,7 +1,0 @@
-server:
-  port: 8081
-
-app:
-  env: development
-  features:
-    detailed-logging: true

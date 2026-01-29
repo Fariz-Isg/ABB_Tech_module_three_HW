@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class Car {
-    private String name;
-    private String color;
-    private int year;
-    private double price;
+public class Payment {
     private Long id;
+    private Long userId;
+    private BigDecimal amount;
+    private String status;
+    private LocalDateTime createdAt;
 }
