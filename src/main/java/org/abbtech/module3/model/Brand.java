@@ -7,33 +7,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "cars")
+@Table(name = "brands")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Car {
+public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String color;
-
-    @Column(nullable = false)
-    private Integer year;
-
-    @Column(nullable = false)
-    private Double price;
-
-    @Column(nullable = false)
-    private Integer speed;
+    @Column(nullable = false, unique = true,  length = 100)
+    private String name;
 
     @Column(length = 50)
-    private String vinNumber;
+    private String country;
+
+    @Column(name = "founded_name")
+    private Integer foundedYear;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -41,9 +36,8 @@ public class Car {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "model_id", nullable = false)
-    private Model model;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<org.abbtech.module3.model.Model> models;
 
     @PrePersist
     protected void onCreate() {

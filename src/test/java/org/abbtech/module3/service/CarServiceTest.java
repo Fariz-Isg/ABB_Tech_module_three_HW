@@ -1,123 +1,216 @@
 package org.abbtech.module3.service;
 
-import org.abbtech.module3.config.AppConfig;
+import org.abbtech.module3.dto.CarRequestDto;
+import org.abbtech.module3.dto.CarResponseDto;
+import org.abbtech.module3.exception.CarErrorEnum;
 import org.abbtech.module3.exception.CarException;
 import org.abbtech.module3.logger.LoggerService;
+import org.abbtech.module3.model.Brand;
 import org.abbtech.module3.model.Car;
+import org.abbtech.module3.model.Model;
+import org.abbtech.module3.repository.CarRepository;
+import org.abbtech.module3.repository.ModelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("CarService Tests")
 class CarServiceTest {
+
+    @Mock
+    private CarRepository carRepository;
+
+    @Mock
+    private ModelRepository modelRepository;
 
     @Mock
     private LoggerService loggerService;
 
-    @Mock
-    private AppConfig appConfig;
-
-    @Mock
-    private AppConfig.FeaturesConfig featuresConfig;
-
+    @InjectMocks
     private CarService carService;
-    private List<Car> initialCars;
+
+    private Brand brand;
+    private Model model;
+    private Car car;
+    private CarRequestDto requestDto;
 
     @BeforeEach
     void setUp() {
-        initialCars = new ArrayList<>();
-        initialCars.add(Car.builder().id(1L).name("BMW").color("red").year(2000).price(15000).build());
-        initialCars.add(Car.builder().id(2L).name("Ford").color("white").year(2005).price(12000).build());
+        brand = Brand.builder()
+                .id(1L)
+                .name("Toyota")
+                .country("Japan")
+                .foundedYear(1937)
+                .build();
 
-        lenient().when(appConfig.getFeatures()).thenReturn(featuresConfig);
-        lenient().when(featuresConfig.isDetailedLogging()).thenReturn(false);
+        model = Model.builder()
+                .id(1L)
+                .name("Camry")
+                .modelYear(2023)
+                .bodyType("Sedan")
+                .brand(brand)
+                .build();
 
-        carService = new CarService(initialCars, loggerService, appConfig);
+        car = Car.builder()
+                .id(1L)
+                .color("Red")
+                .year(2023)
+                .price(30000.0)
+                .speed(200)
+                .vinNumber("VIN123456")
+                .model(model)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        requestDto = new CarRequestDto(1L, "Red", 2023, 30000.0, 200, "VIN123456");
     }
 
     @Test
-    @DisplayName("Should return all cars")
-    void testGetAll() {
-        List<Car> cars = carService.getAll();
+    void getAllCars_ShouldReturnAllCars() {
+        List<Car> cars = Arrays.asList(car);
+        when(carRepository.findAll()).thenReturn(cars);
 
-        assertEquals(2, cars.size());
-        assertEquals("BMW", cars.get(0).getName());
+        List<CarResponseDto> result = carService.getAllCars();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Red", result.get(0).color());
+        verify(carRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("Should return car by ID")
-    void testGetById() {
-        Optional<Car> car = carService.getById(1L);
+    void getCarById_WhenCarExists_ShouldReturnCar() {
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
 
-        assertTrue(car.isPresent());
-        assertEquals("BMW", car.get().getName());
+        CarResponseDto result = carService.getCarById(1L);
+
+        assertNotNull(result);
+        assertEquals("Red", result.color());
+        assertEquals("Camry", result.modelName());
+        assertEquals("Toyota", result.brandName());
+        verify(carRepository, times(1)).findById(1L);
     }
 
     @Test
-    @DisplayName("Should throw exception when car not found")
-    void testGetByIdNotFound() {
-        assertThrows(CarException.class, () -> carService.getById(999L));
+    void getCarById_WhenCarNotFound_ShouldThrowException() {
+        when(carRepository.findById(999L)).thenReturn(Optional.empty());
+
+        CarException exception = assertThrows(CarException.class,
+                () -> carService.getCarById(999L));
+
+        assertEquals(CarErrorEnum.CAR_NOT_FOUND, exception.baseErrorService);
+        verify(carRepository, times(1)).findById(999L);
     }
 
     @Test
-    @DisplayName("Should save new car")
-    void testSave() {
-        Car newCar = Car.builder().name("Tesla").color("black").year(2024).price(50000).build();
+    void getCarsByModelId_ShouldReturnCars() {
+        List<Car> cars = Arrays.asList(car);
+        when(carRepository.findByModelId(1L)).thenReturn(cars);
 
-        carService.save(newCar);
+        List<CarResponseDto> result = carService.getCarsByModelId(1L);
 
-        assertEquals(3, carService.getAll().size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(carRepository, times(1)).findByModelId(1L);
     }
 
     @Test
-    @DisplayName("Should throw exception when name is null")
-    void testSaveWithNullName() {
-        Car invalidCar = Car.builder().name(null).color("black").year(2024).price(50000).build();
+    void createCar_WhenModelExists_ShouldCreateCar() {
+        when(modelRepository.findById(1L)).thenReturn(Optional.of(model));
+        when(carRepository.save(any(Car.class))).thenReturn(car);
 
-        assertThrows(CarException.class, () -> carService.save(invalidCar));
+        CarResponseDto result = carService.createCar(requestDto);
+
+        assertNotNull(result);
+        assertEquals("Red", result.color());
+        verify(modelRepository, times(1)).findById(1L);
+        verify(carRepository, times(1)).save(any(Car.class));
     }
 
     @Test
-    @DisplayName("Should update existing car")
-    void testUpdate() {
-        Car updatedCar = Car.builder().name("BMW Updated").color("blue").year(2022).price(20000).build();
+    void createCar_WhenModelNotFound_ShouldThrowException() {
+        when(modelRepository.findById(999L)).thenReturn(Optional.empty());
+        CarRequestDto dto = new CarRequestDto(999L, "Red", 2023, 30000.0, 200, "VIN123");
 
-        Optional<Car> result = carService.update(1L, updatedCar);
+        CarException exception = assertThrows(CarException.class,
+                () -> carService.createCar(dto));
 
-        assertTrue(result.isPresent());
-        assertEquals("BMW Updated", result.get().getName());
+        assertEquals(CarErrorEnum.MODEL_NOT_FOUND, exception.baseErrorService);
+        verify(modelRepository, times(1)).findById(999L);
+        verify(carRepository, never()).save(any(Car.class));
     }
 
     @Test
-    @DisplayName("Should throw exception when updating non-existent car")
-    void testUpdateNotFound() {
-        Car updatedCar = Car.builder().name("Test").color("blue").year(2022).price(20000).build();
+    void updateCar_WhenCarAndModelExist_ShouldUpdateCar() {
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(modelRepository.findById(1L)).thenReturn(Optional.of(model));
+        when(carRepository.save(any(Car.class))).thenReturn(car);
 
-        assertThrows(CarException.class, () -> carService.update(999L, updatedCar));
+        CarResponseDto result = carService.updateCar(1L, requestDto);
+
+        assertNotNull(result);
+        verify(carRepository, times(1)).findById(1L);
+        verify(modelRepository, times(1)).findById(1L);
+        verify(carRepository, times(1)).save(any(Car.class));
     }
 
     @Test
-    @DisplayName("Should delete car")
-    void testDelete() {
-        carService.delete(1L);
+    void updateCar_WhenCarNotFound_ShouldThrowException() {
+        when(carRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertEquals(1, carService.getAll().size());
+        CarException exception = assertThrows(CarException.class,
+                () -> carService.updateCar(999L, requestDto));
+
+        assertEquals(CarErrorEnum.CAR_NOT_FOUND, exception.baseErrorService);
+        verify(carRepository, times(1)).findById(999L);
     }
 
     @Test
-    @DisplayName("Should throw exception when deleting non-existent car")
-    void testDeleteNotFound() {
-        assertThrows(CarException.class, () -> carService.delete(999L));
+    void updateCar_WhenModelNotFound_ShouldThrowException() {
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(modelRepository.findById(999L)).thenReturn(Optional.empty());
+        CarRequestDto dto = new CarRequestDto(999L, "Blue", 2023, 35000.0, 220, "VIN789");
+
+        CarException exception = assertThrows(CarException.class,
+                () -> carService.updateCar(1L, dto));
+
+        assertEquals(CarErrorEnum.MODEL_NOT_FOUND, exception.baseErrorService);
+        verify(carRepository, times(1)).findById(1L);
+        verify(modelRepository, times(1)).findById(999L);
+    }
+
+    @Test
+    void deleteCar_WhenCarExists_ShouldDeleteCar() {
+        when(carRepository.existsById(1L)).thenReturn(true);
+
+        carService.deleteCar(1L);
+
+        verify(carRepository, times(1)).existsById(1L);
+        verify(carRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteCar_WhenCarNotFound_ShouldThrowException() {
+        when(carRepository.existsById(999L)).thenReturn(false);
+
+        CarException exception = assertThrows(CarException.class,
+                () -> carService.deleteCar(999L));
+
+        assertEquals(CarErrorEnum.CAR_NOT_FOUND, exception.baseErrorService);
+        verify(carRepository, times(1)).existsById(999L);
+        verify(carRepository, never()).deleteById(anyLong());
     }
 }

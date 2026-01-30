@@ -5,3 +5,7 @@ app:
   env: development
   features:
     detailed-logging: true
+
+spring:
+  jpa:
+    show-sql: true

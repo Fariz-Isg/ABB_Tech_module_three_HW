@@ -5,3 +5,7 @@ app:
   env: production
   features:
     detailed-logging: false
+
+spring:
+  jpa:
+    show-sql: false
