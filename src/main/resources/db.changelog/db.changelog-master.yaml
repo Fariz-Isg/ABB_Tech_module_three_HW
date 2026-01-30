@@ -1,7 +1,29 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/tbl-brand/20260130-1-create-brands-table.yml
+      file: db.changelog/tbl-app_user/20260130-1-create-tbl-app_user.yaml
   - include:
-      file: db/changelog/tbl-model/20260130-1-create-models-table.yml
+      file: db.changelog/tbl-brand/20260130-1-create-tbl-brands.yaml
   - include:
-      file: db/changelog/tbl-car/20260130-1-create-cars-table.yml
+      file: db.changelog/tbl-car/20260130-1-create-tbl-cars.yaml
+  - include:
+      file: db.changelog/tbl-car_feature/20260130-1-create-tbl-car_feature.yaml
+  - include:
+      file: db.changelog/tbl-car_details/20260130-1-create-tbl-car_details.yaml
+  - include:
+      file: db.changelog/tbl-feature/20260130-1-create-tbl-feature.yaml
+  - include:
+      file: db.changelog/tbl-model/20260130-1-create-tbl-models.yaml
+  - include:
+      file: db.changelog/tbl-part/20260130-1-create-tbl-part.yaml
+  - include:
+      file: db.changelog/tbl-permission/20260130-1-create-tbl-permission.yaml
+  - include:
+      file: db.changelog/tbl-role/20260130-1-create-tbl-role.yaml
+  - include:
+      file: db.changelog/tbl-role_permission/20260130-1-create-tbl-role_permission.yaml
+  - include:
+      file: db.changelog/tbl-service_part/20260130-1-create-tbl-service_part.yaml
+  - include:
+      file: db.changelog/tbl-service_visit/20260130-1-create-tbl-service_visit.yaml
+  - include:
+      file: db.changelog/tbl-user_role/20260130-1-create-tbl-user_role.yaml

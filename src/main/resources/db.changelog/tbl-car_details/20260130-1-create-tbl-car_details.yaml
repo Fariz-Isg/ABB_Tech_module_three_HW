@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-tbl-cardetails
+      id: 20260130-1-create-tbl-car_details
       author: fariz
       changes:
         - createTable:
