@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-table-brand
+      id: 20260130-1-create-tbl-part
       author: fariz
       changes:
         - createTable:
-            tableName: brand
+            tableName: part
             columns:
               - column:
                   name: id
@@ -12,20 +12,19 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: brand_pkey
+                    primaryKeyName: part_pkey
               - column:
                   name: name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: brand_name_key
               - column:
-                  name: country
+                  name: part_code
                   type: varchar(255)
               - column:
-                  name: founded_year
-                  type: integer
+                  name: description
+                  type: varchar(255)
               - column:
-                  name: trigger_column
-                  type: varchar(200)
+                  name: unit_price
+                  type: numeric(10, 2)
+              - column:
+                  name: brand
+                  type: varchar(255)

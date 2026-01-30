@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-role_permission
+      author: fariz
+      changes:
+        - createTable:
+            tableName: role_permission
+            columns:
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_role_permission_role
+                    references: role(id)
+                    deleteCascade: true
+              - column:
+                  name: permission_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_role_permission_permission
+                    references: permission(id)
+                    deleteCascade: true
+        - addPrimaryKey:
+            tableName: role_permission
+            columnNames: role_id, permission_id

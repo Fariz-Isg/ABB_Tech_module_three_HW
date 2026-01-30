@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-table-brand
+      id: 20260130-1-create-tbl-permission
       author: fariz
       changes:
         - createTable:
-            tableName: brand
+            tableName: permission
             columns:
               - column:
                   name: id
@@ -12,20 +12,18 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: brand_pkey
               - column:
-                  name: name
+                  name: http_method
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: path_pattern
                   type: varchar(255)
                   constraints:
                     nullable: false
-                    unique: true
-                    uniqueConstraintName: brand_name_key
               - column:
-                  name: country
-                  type: varchar(255)
-              - column:
-                  name: founded_year
-                  type: integer
-              - column:
-                  name: trigger_column
-                  type: varchar(200)
+                  name: permission_code
+                  type: varchar(100)
+                  constraints:
+                    nullable: false

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-table-brand
+      id: 20260130-1-create-table-role
       author: fariz
       changes:
         - createTable:
-            tableName: brand
+            tableName: role
             columns:
               - column:
                   name: id
@@ -12,20 +12,12 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: brand_pkey
               - column:
                   name: name
-                  type: varchar(255)
+                  type: varchar(50)
                   constraints:
                     nullable: false
                     unique: true
-                    uniqueConstraintName: brand_name_key
               - column:
-                  name: country
-                  type: varchar(255)
-              - column:
-                  name: founded_year
-                  type: integer
-              - column:
-                  name: trigger_column
-                  type: varchar(200)
+                  name: description
+                  type: text

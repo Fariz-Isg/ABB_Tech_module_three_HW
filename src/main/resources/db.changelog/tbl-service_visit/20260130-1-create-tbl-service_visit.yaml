@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-tbl-car
+      id: 20260130-1-create-tbl-service_visit
       author: fariz
       changes:
         - createTable:
-            tableName: car
+            tableName: service_visit
             columns:
               - column:
                   name: id
@@ -12,29 +12,29 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: car_pkey
+                    primaryKeyName: service_visit_pkey
               - column:
-                  name: model_id
+                  name: car_id
                   type: integer
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_car_model
-                    references: model(id)
+                    foreignKeyName: fk_service_visit_car
+                    references: car(id)
               - column:
-                  name: vin
-                  type: varchar(20)
+                  name: service_date
+                  type: timestamp
                   constraints:
                     nullable: false
               - column:
-                  name: registration_number
-                  type: varchar(10)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: mileage_km
+                  name: odometer_km
                   type: integer
                   constraints:
                     nullable: false
               - column:
-                  name: production_year
-                  type: integer
+                  name: service_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: varchar(255)

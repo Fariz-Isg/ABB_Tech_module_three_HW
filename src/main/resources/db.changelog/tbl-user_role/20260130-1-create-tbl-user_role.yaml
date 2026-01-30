@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-user_role
+      author: fariz
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_role_user
+                    references: app_user(id)
+                    deleteCascade: true
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_role_role
+                    references: role(id)
+                    deleteCascade: true
+        - addPrimaryKey:
+            tableName: user_role
+            columnNames: user_id, role_id

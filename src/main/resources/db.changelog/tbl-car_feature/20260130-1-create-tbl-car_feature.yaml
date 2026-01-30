@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-car_feature
+      author: fariz
+      changes:
+        - createTable:
+            tableName: car_feature
+            columns:
+              - column:
+                  name: car_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_feature_car
+                    references: car(id)
+              - column:
+                  name: feature_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_feature_feature
+                    references: feature(id)
+        - addPrimaryKey:
+            tableName: car_feature
+            columnNames: car_id, feature_id
+            constraintName: pk_car_feature

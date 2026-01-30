@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-table-brand
+      id: 20260130-1-create-tbl-feature
       author: fariz
       changes:
         - createTable:
-            tableName: brand
+            tableName: feature
             columns:
               - column:
                   name: id
@@ -12,20 +12,19 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: brand_pkey
+                    primaryKeyName: feature_pkey
+              - column:
+                  name: feature_id
+                  type: integer
+                  constraints:
+                    unique: true
+                    uniqueConstraintName: feature_feature_id_key
               - column:
                   name: name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: brand_name_key
               - column:
-                  name: country
+                  name: description
                   type: varchar(255)
               - column:
-                  name: founded_year
-                  type: integer
-              - column:
-                  name: trigger_column
-                  type: varchar(200)
+                  name: category
+                  type: varchar(255)

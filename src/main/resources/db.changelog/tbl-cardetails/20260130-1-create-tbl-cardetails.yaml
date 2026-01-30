@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-cardetails
+      author: fariz
+      changes:
+        - createTable:
+            tableName: cardetails
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: cardetails_pkey
+              - column:
+                  name: car_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_details_car
+                    references: car(id)
+                    unique: true
+                    uniqueConstraintName: uc_cardetails_car
+              - column:
+                  name: engine_number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_code
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uc_registration_code
+              - column:
+                  name: fuel_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_capacity
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: varchar(255)
+              - column:
+                  name: insurance_number
+                  type: varchar(255)

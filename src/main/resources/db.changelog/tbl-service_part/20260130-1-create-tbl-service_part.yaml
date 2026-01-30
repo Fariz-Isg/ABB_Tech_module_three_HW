@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260130-1-create-tbl-model
+      id: 20260130-1-create-tbl-service_part
       author: fariz
       changes:
         - createTable:
-            tableName: model
+            tableName: service_part
             columns:
               - column:
                   name: id
@@ -12,26 +12,23 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: model_pkey
+                    primaryKeyName: service_part_pkey
               - column:
-                  name: brand_id
+                  name: service_id
                   type: integer
-                  constraints:
-                    foreignKeyName: fk_model_brand
-                    references: brand(id)
-              - column:
-                  name: name
-                  type: varchar(255)
                   constraints:
                     nullable: false
+                    foreignKeyName: fk_service_part_service_visit
+                    references: service_visit(id)
               - column:
-                  name: category
-                  type: varchar(255)
+                  name: part_id
+                  type: integer
                   constraints:
                     nullable: false
+                    foreignKeyName: fk_service_part_part
+                    references: part(id)
               - column:
-                  name: year_from
+                  name: quantity
                   type: integer
-              - column:
-                  name: year_to
-                  type: integer
+                  constraints:
+                    nullable: false
