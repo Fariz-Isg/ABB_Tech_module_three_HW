@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-brands.yaml
+      author: fariz
+      changes:
+        - createTable:
+            tableName: brands
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: country
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: founded_name
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+        - createIndex:
+            indexName: idx_brand_name
+            tableName: brands
+            columns:
+              - column:
+                  name: name

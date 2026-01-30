@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260130-1-create-tbl-models.yaml
+      author: car-service
+      changes:
+        - createTable:
+            tableName: models
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_year
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: body_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: brand_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: brand_id
+            constraintName: fk_models_brand
+            referencedTableName: brands
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - createIndex:
+            indexName: idx_model_brand_id
+            tableName: models
+            columns:
+              - column:
+                  name: brand_id

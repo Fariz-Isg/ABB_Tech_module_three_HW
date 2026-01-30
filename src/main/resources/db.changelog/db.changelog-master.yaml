@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/tbl-brand/20260130-1-create-brands-table.yml
+  - include:
+      file: db/changelog/tbl-model/20260130-1-create-models-table.yml
+  - include:
+      file: db/changelog/tbl-car/20260130-1-create-cars-table.yml

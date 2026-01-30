@@ -8,6 +8,7 @@ spring:
       username: postgres
       password: postgres
       driver-class-name: org.postgresql.Driver
+
     jpa:
       hibernate:
         ddl-auto: update
@@ -15,6 +16,11 @@ spring:
       properties:
         hibernate:
           format_sql: true
+
+    liquibase:
+      enabled: true
+      change-log: classpath:/db/changelog/db.changelog-master.yaml
+
 server:
     port: 8080
 
